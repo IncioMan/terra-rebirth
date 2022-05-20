@@ -13,6 +13,11 @@ import 'chart.js/auto';
 import './PoolChart.css'
 import { useEffect, useState } from 'react';
 import Slider from '@mui/material/Slider';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 const axios = require('axios').default;
 
 
@@ -67,24 +72,23 @@ export default function PoolChart(props) {
       return
     }
 
-    const balances = rawData.map((d)=>d.balance)
+    const filtData = rawData.filter((d)=>d.balance>0)
+                            .filter((d)=>d.balance>=range[0])
+                            .filter((d)=>d.balance<=range[1])
+    const balances = filtData.map((d)=>d.balance)
 
     const data = {
       labels: votingOptions,
       datasets: votingOptions.map((l)=>{
         return {
           label: l,
-          data:
-          rawData.filter((d)=>d.option==l)
-                 .filter((d)=>d.balance>0)
-                 .filter((d)=>d.balance>=range[0])
-                 .filter((d)=>d.balance<=range[1])
-                 .map((d)=>
+          data: filtData.filter((d)=>d.option==l).map((d)=>
           {
             let datapoint = {}
             datapoint.x = d.hours_since_start
             datapoint.y = d.date
             datapoint.option = d.option
+            datapoint.address = d.address
             datapoint.r = invlerp(Math.min(...balances), Math.max(...balances), d.balance)*10
             return datapoint
           }),
@@ -168,10 +172,25 @@ export default function PoolChart(props) {
               step={0.1}
               onChange={handleChange}
               valueLabelDisplay="auto"
-              style={{width:'20%'}}
+              style={{width:'80%'}}
               min={balanceRange[0]}
               max={balanceRange[1]}
             />
+          </div>
+          <div className='slider-container'>
+            <FormControl>
+              <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="female"
+                name="radio-buttons-group"
+              >
+                <FormControlLabel value="female" control={<Radio />} label="Female" />
+                <FormControlLabel value="male" control={<Radio />} label="Male" />
+                <FormControlLabel value="other" control={<Radio />} label="Other" />
+              </RadioGroup>
+            </FormControl>
           </div>
           <Bubble options={chartData.options} data={chartData.data} />
           </>
