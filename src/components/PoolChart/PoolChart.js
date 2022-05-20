@@ -170,7 +170,7 @@ export default function PoolChart(props) {
     return (
       <>
       <div className='chart-container'>
-      <div style={{ width: "100%", minWidth: "250px"}}>
+      <div style={{ width: "80%", minWidth: "250px"}}>
         { (chartData.data)&&
           <>
           <div className='slider-container'>
