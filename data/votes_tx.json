@@ -1,4 +1,4 @@
-[{
+[{"0":{
     "date":"1652832000000",
     "address":"mio", 
     "block_timestamp":"",
@@ -9,7 +9,8 @@
     "balance":"5",
     "currency":"LUNA",
     "hours_since_start":12
-},{
+}},
+{"1":{
     "date":"1652833000000",
     "address":"mio1", 
     "block_timestamp":"",
@@ -20,8 +21,8 @@
     "balance":"10",
     "currency":"LUNA",
     "hours_since_start":13
-},
-{
+}},
+{"2":{
     "date":"1652834000000",
     "address":"mio2", 
     "block_timestamp":"",
@@ -32,4 +33,4 @@
     "balance":"15",
     "currency":"LUNA",
     "hours_since_start":14
-},]
+}}]
