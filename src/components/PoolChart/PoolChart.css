@@ -11,6 +11,16 @@
     display: flex;
     justify-content: end;
 }
+.slider-text{
+  font-size: 13px;
+  text-align: center;
+}
+.slider-text-container{
+  padding-right: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .div-pool-select{
   width: 100%;

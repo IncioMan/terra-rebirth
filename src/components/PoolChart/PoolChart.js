@@ -38,7 +38,7 @@ export default function PoolChart(props) {
   const [balanceRange, setBalanceRange] = useState([])
   const [rawData, setRawData] = useState([])
   const [range, setRange] = useState([10,90])
-  const [votingOptions, setVotingOption] = useState(['Yes','No'])
+  const [votingOptions, setVotingOptions] = useState(['Yes','No'])
   const [chartData, setChartData] = useState({options:null, data:null})
   const votingOptionColor = {
     'Yes':'white',
@@ -49,6 +49,11 @@ export default function PoolChart(props) {
 
   const handleChange = (event, newValue) => {
     setRange(newValue);
+  };
+
+  const handleVoteOption = (event) => {
+    console.log(event.target.value)
+    setVotingOptions([event.target.value]);
   };
 
   
@@ -72,7 +77,8 @@ export default function PoolChart(props) {
       return
     }
 
-    const filtData = rawData.filter((d)=>d.balance>0)
+    const filtData = rawData.filter((d)=>votingOptions.includes(d.option))
+                            .filter((d)=>d.balance>0)
                             .filter((d)=>d.balance>=range[0])
                             .filter((d)=>d.balance<=range[1])
     const balances = filtData.map((d)=>d.balance)
@@ -165,7 +171,7 @@ export default function PoolChart(props) {
       data: data
     }
     setChartData(cd)
-  },[rawData, range])
+  },[rawData, range, votingOptions])
 
     return (
       <>
@@ -174,6 +180,11 @@ export default function PoolChart(props) {
         { (chartData.data)&&
           <>
           <div className='slider-container'>
+            <div className='slider-text-container'>
+              <div className='slider-text'>
+                  {Math.round(range[0]/1000,2)}k-{Math.round(range[1]/1000,2)}k LUNA
+              </div>
+            </div>
             <Slider className="slider-range"
               getAriaLabel={() => 'Temperature range'}
               value={range}
@@ -187,17 +198,17 @@ export default function PoolChart(props) {
           </div>
           <div className='slider-container'>
             <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">Vote</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="yes"
                 name="radio-buttons-group"
+                onChange={handleVoteOption}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="abstain" control={<Radio />} label="Abstain" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-                <FormControlLabel style={{marginRight:'0px'}} value="no_veto" control={<Radio />} label="No With Veto" />
+                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="Abstain" control={<Radio />} label="Abstain" />
+                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel style={{marginRight:'0px'}} value="No with veto" control={<Radio />} label="No With Veto" />
               </RadioGroup>
             </FormControl>
           </div>
