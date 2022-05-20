@@ -100,7 +100,7 @@ export default function PoolChart(props) {
             datapoint.balance = d.balance
             datapoint.age = d.age
             datapoint.hours_since_start = d.hours_since_start
-            datapoint.r = (d.age/365)*6
+            datapoint.r = (d.age/365)*5+2
             return datapoint
           }),
           fill: false,
