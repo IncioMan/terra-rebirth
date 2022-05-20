@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bubble } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './PoolChart.css'
 import { useEffect, useState } from 'react';
@@ -30,16 +30,16 @@ ChartJS.defaults.borderColor = "#fff";
 
 export default function PoolChart(props) {
   const [rawData, setRawData] = useState([])
+  const [votingOptions, setVotingOption] = useState(['Yes','No'])
   const [chartData, setChartData] = useState({options:null, data:null})
-  const [poolIds, setPoolIds] = useState([])
-  const [poolId, setPoolId] = useState(1)
-
-  const handlePoolSelection = (e) => {
-    setPoolId(e.target.value)
+  const votingOptionColor = {
+    'Yes':'white',
+    'No':'red'
   }
+
   
   useEffect(()=>{
-    axios.get("https://raw.githubusercontent.com/IncioMan/osmosis-pools-dashboard/master/data/delta_cumsum.json")
+    axios.get("https://raw.githubusercontent.com/IncioMan/terra-rebirth/master/data/votes_tx.json")
         .then(function (response) {
           console.log(response.data)
           setRawData(response.data)
@@ -53,28 +53,28 @@ export default function PoolChart(props) {
     if(rawData.length == 0){
       return
     }
-    setPoolIds(Object.keys(rawData))
-
-    const dates = Object.keys(rawData[poolId])
 
     const data = {
-      labels: dates,
-      datasets: [{
-          label: 'For',
+      labels: votingOptions,
+      datasets: votingOptions.map((l)=>{
+        return {
+          label: l,
           data:
-          dates.map((d)=>
+          rawData.filter((d)=>d.option==l).map((d)=>
           {
             let datapoint = {}
-            datapoint.x = d
-            datapoint.y = rawData[poolId][d]
-            datapoint.poolId = poolId
+            datapoint.x = d.hours_since_start
+            datapoint.y = d.date
+            datapoint.option = d.option
+            datapoint.r = d.balance
             return datapoint
           }),
           fill: false,
           borderColor: '#fbc02c',
-          tension: 0.1
+          tension: 0.1,
+          backgroundColor: votingOptionColor[l]
         }
-      ],
+      })
     }
 
     const options = {
@@ -122,7 +122,7 @@ export default function PoolChart(props) {
       data: data
     }
     setChartData(cd)
-  },[rawData,poolId])
+  },[rawData])
 
   const options = {
     responsive: true,
@@ -138,17 +138,10 @@ export default function PoolChart(props) {
   }
     return (
       <>
-      <div className='div-pool-select'>
-          <select className='pool-select' id="cars" onChange={handlePoolSelection}>
-            {poolIds.map((id)=>{
-              return <option value={id}>#{id}</option>
-            })}
-          </select>
-      </div>
       <div className='chart-container'>
       <div style={{ width: "100%", minWidth: "250px"}}>
         { (chartData.data)&&
-          <Line options={chartData.options} data={chartData.data} />
+          <Bubble options={chartData.options} data={chartData.data} />
         }
       </div>
     </div>
