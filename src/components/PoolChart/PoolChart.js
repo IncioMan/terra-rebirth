@@ -41,8 +41,10 @@ export default function PoolChart(props) {
   const [votingOptions, setVotingOptions] = useState(['Yes','No'])
   const [chartData, setChartData] = useState({options:null, data:null})
   const votingOptionColor = {
-    'Yes':'white',
-    'No':'red'
+    'Yes':'limegreen',
+    'No':'#F55353',
+    'No with veto':'#B20600',
+    'Abstain':'white'
   }
   const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a));
   const invlerp = (x, y, a) => clamp((a - x) / (y - x));
@@ -91,13 +93,13 @@ export default function PoolChart(props) {
           data: filtData.filter((d)=>d.option===l).map((d)=>
           {
             let datapoint = {}
-            datapoint.x = d.hours_since_start
-            datapoint.y = d.date
+            datapoint.x = (1000 - 2000*Math.random()) + d.balance
+            datapoint.y = (100000000 - 200000000*Math.random()) + d.date
             datapoint.option = d.option
             datapoint.address = d.address
             datapoint.balance = d.balance
             datapoint.hours_since_start = d.hours_since_start
-            datapoint.r = invlerp(Math.min(...balances), Math.max(...balances), d.balance)*10
+            datapoint.r = 1/d.hours_since_start*5
             return datapoint
           }),
           fill: false,
@@ -151,16 +153,18 @@ export default function PoolChart(props) {
             display: false
           },
           title: {
-            display: false,
+            display: true,
+            text: 'LUNA balance'
           }
         },
         y: {
+          display: false,
           grid:{
             display: false
           },
           title: {
             display: true,
-            text: 'Total gamma tokens since 1st of February 2022'
+            text: 'Placeholder for date creation'
           }
         },
       },
