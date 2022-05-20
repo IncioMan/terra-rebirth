@@ -98,8 +98,9 @@ export default function PoolChart(props) {
             datapoint.option = d.option
             datapoint.address = d.address
             datapoint.balance = d.balance
+            datapoint.age = d.age
             datapoint.hours_since_start = d.hours_since_start
-            datapoint.r = 4.5
+            datapoint.r = (d.age/365)*6
             return datapoint
           }),
           fill: false,
@@ -130,12 +131,14 @@ export default function PoolChart(props) {
                 let labelAddress=''
                 let labelVote='' 
                 let labelTime = ''
+                let labelAge = ''
                 if (context.raw) {
                     labelTime += 'Hours after beginning of voting: '+context.raw.hours_since_start
                     labelAddress += 'Address: '+context.raw.address
+                    labelAge += 'Wallet Age: '+context.raw.age
                     labelVote += 'Balance: '+ context.raw.balance + ' LUNA'
                 }
-                return [label, labelVote, labelAddress, labelTime];
+                return [label, labelVote, labelAddress, labelAge, labelTime];
               }
             }
         }
