@@ -68,7 +68,7 @@ export default function PoolChart(props) {
   },[])
 
   useEffect(()=>{
-    if(rawData.length == 0){
+    if(rawData.length === 0){
       return
     }
 
@@ -82,13 +82,15 @@ export default function PoolChart(props) {
       datasets: votingOptions.map((l)=>{
         return {
           label: l,
-          data: filtData.filter((d)=>d.option==l).map((d)=>
+          data: filtData.filter((d)=>d.option===l).map((d)=>
           {
             let datapoint = {}
             datapoint.x = d.hours_since_start
             datapoint.y = d.date
             datapoint.option = d.option
             datapoint.address = d.address
+            datapoint.balance = d.balance
+            datapoint.hours_since_start = d.hours_since_start
             datapoint.r = invlerp(Math.min(...balances), Math.max(...balances), d.balance)*10
             return datapoint
           }),
@@ -111,6 +113,24 @@ export default function PoolChart(props) {
           display: false,
           text: 'Chart.js Line Chart',
         },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            label: function(context) {
+                console.log(context)
+                let label = context.dataset.label || '';
+                let labelAddress=''
+                let labelVote='' 
+                let labelTime = ''
+                if (context.raw) {
+                    labelTime += 'Hours after beginning of voting: '+context.raw.hours_since_start
+                    labelAddress += 'Address: '+context.raw.address
+                    labelVote += 'Balance: '+ context.raw.balance + ' LUNA'
+                }
+                return [label, labelVote, labelAddress, labelTime];
+              }
+            }
+        }
       },
       elements: {
         point:{
@@ -147,18 +167,6 @@ export default function PoolChart(props) {
     setChartData(cd)
   },[rawData, range])
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Chart.js Line Chart',
-      },
-    },
-  }
     return (
       <>
       <div className='chart-container'>
@@ -179,16 +187,17 @@ export default function PoolChart(props) {
           </div>
           <div className='slider-container'>
             <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+              <FormLabel id="demo-radio-buttons-group-label">Vote</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
+                defaultValue="yes"
                 name="radio-buttons-group"
               >
-                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                <FormControlLabel value="other" control={<Radio />} label="Other" />
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="abstain" control={<Radio />} label="Abstain" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel style={{marginRight:'0px'}} value="no_veto" control={<Radio />} label="No With Veto" />
               </RadioGroup>
             </FormControl>
           </div>

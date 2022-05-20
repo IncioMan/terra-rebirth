@@ -1,8 +1,9 @@
 .chart-container{
-  width: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 80vmin
 }
 
 .slider-container{
@@ -27,7 +28,7 @@ font-size: 3vmin;
 
 @media (max-width:640px) {
 .chart-container{
-  height: 80vmax;
+      height: 80vmax;
       display: flex;
       justify-content: center;
       align-items: center;
