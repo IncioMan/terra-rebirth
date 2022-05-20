@@ -99,7 +99,7 @@ export default function PoolChart(props) {
             datapoint.address = d.address
             datapoint.balance = d.balance
             datapoint.hours_since_start = d.hours_since_start
-            datapoint.r = 1/d.hours_since_start*5
+            datapoint.r = 4.5
             return datapoint
           }),
           fill: false,
