@@ -11,7 +11,6 @@ function App() {
         <div className='div-logo'>
           <img src={logo} className="App-logo" alt="logo" />
         </div>
-        <div></div>
         <PoolChart/>
       </header>
     </div>

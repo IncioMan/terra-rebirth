@@ -5,6 +5,12 @@
     align-items: center;
 }
 
+.slider-container{
+  width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
 .div-pool-select{
   width: 100%;
   display: flex;
