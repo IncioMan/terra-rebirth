@@ -1,0 +1,35 @@
+[{
+    "date":"1652832000000",
+    "address":"mio", 
+    "block_timestamp":"",
+    "tx_id":"",
+    "proposal_id":"",
+    "option":"",
+    "voting_power":"",
+    "balance":"5",
+    "currency":"LUNA",
+    "hours_since_start":12
+},{
+    "date":"1652833000000",
+    "address":"mio1", 
+    "block_timestamp":"",
+    "tx_id":"",
+    "proposal_id":"",
+    "option":"",
+    "voting_power":"",
+    "balance":"10",
+    "currency":"LUNA",
+    "hours_since_start":13
+},
+{
+    "date":"1652834000000",
+    "address":"mio2", 
+    "block_timestamp":"",
+    "tx_id":"",
+    "proposal_id":"",
+    "option":"",
+    "voting_power":"",
+    "balance":"15",
+    "currency":"LUNA",
+    "hours_since_start":14
+},]
