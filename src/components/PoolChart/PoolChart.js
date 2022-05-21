@@ -208,9 +208,10 @@ export default function PoolChart(props) {
               <RadioGroup
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="yes"
+                defaultValue={votingOptions}
                 name="radio-buttons-group"
-                onChange={handleVoteOption}
+                multiple
+                onChange= {handleVoteOption}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="Abstain" control={<Radio />} label="Abstain" />
