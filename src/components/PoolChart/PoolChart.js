@@ -55,7 +55,11 @@ export default function PoolChart(props) {
 
   const handleVoteOption = (event) => {
     console.log(event.target.value)
+    if(event.target.value === 'All'){
+    setVotingOptions(['Yes','No','Abstain','No with veto']);
+    }else{
     setVotingOptions([event.target.value]);
+    }
   };
 
   
@@ -213,6 +217,7 @@ export default function PoolChart(props) {
                 multiple
                 onChange= {handleVoteOption}
               >
+                <FormControlLabel value="All" control={<Radio />} label="All" />
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="Abstain" control={<Radio />} label="Abstain" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
