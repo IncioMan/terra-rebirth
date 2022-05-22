@@ -36,6 +36,8 @@ ChartJS.defaults.borderColor = "#fff";
 
 export default function PoolChart(props) {
   const [balanceRange, setBalanceRange] = useState([])
+  const [inputAddress, setInputAddress] = useState()
+  const [votingValue, setVotingValue] = useState('All')
   const [rawData, setRawData] = useState([])
   const [range, setRange] = useState([10,90])
   const [votingOptions, setVotingOptions] = useState(['Yes','No'])
@@ -55,12 +57,24 @@ export default function PoolChart(props) {
 
   const handleVoteOption = (event) => {
     console.log(event.target.value)
+    setVotingValue(event.target.value)
     if(event.target.value === 'All'){
-    setVotingOptions(['Yes','No','Abstain','No with veto']);
+      setVotingOptions(['Yes','No','Abstain','No with veto']);
     }else{
-    setVotingOptions([event.target.value]);
+      setVotingOptions([event.target.value]);
     }
   };
+
+  const handleTextInput = (e)=>{
+    setInputAddress(e.target.value)
+  }
+
+  useEffect(()=>{
+    if(inputAddress && inputAddress !== ''){
+      setVotingOptions(['Yes','No','Abstain','No with veto']);
+      setVotingValue('No');
+    }
+  },[inputAddress])
 
   
   useEffect(()=>{
@@ -83,11 +97,13 @@ export default function PoolChart(props) {
       return
     }
 
-    const filtData = rawData.filter((d)=>votingOptions.includes(d.option))
+    let filtData = rawData.filter((d)=>votingOptions.includes(d.option))
                             .filter((d)=>d.balance>0)
                             .filter((d)=>d.balance>=range[0])
                             .filter((d)=>d.balance<=range[1])
-    const balances = filtData.map((d)=>d.balance)
+    if(inputAddress && inputAddress !== ''){
+      filtData = filtData.filter((d)=>d.address===inputAddress)
+    }
 
     const data = {
       labels: votingOptions,
@@ -103,6 +119,7 @@ export default function PoolChart(props) {
             datapoint.address = d.address
             datapoint.balance = d.balance
             datapoint.age = d.age
+            datapoint.validator = d.validator
             datapoint.hours_since_start = d.hours_since_start
             datapoint.r = (d.age/365)*5+2
             return datapoint
@@ -136,13 +153,15 @@ export default function PoolChart(props) {
                 let labelVote='' 
                 let labelTime = ''
                 let labelAge = ''
+                let labelValidator = ''
                 if (context.raw) {
                     labelTime += 'Hours after beginning of voting: '+context.raw.hours_since_start
                     labelAddress += 'Address: '+context.raw.address
                     labelAge += 'Wallet Age: '+context.raw.age
+                    labelValidator += 'Validator: '+context.raw.validator
                     labelVote += 'Balance: '+ context.raw.balance + ' LUNA'
                 }
-                return [label, labelVote, labelAddress, labelAge, labelTime];
+                return [label, labelVote, labelAddress, labelAge, labelTime, labelValidator];
               }
             }
         }
@@ -182,7 +201,7 @@ export default function PoolChart(props) {
       data: data
     }
     setChartData(cd)
-  },[rawData, range, votingOptions])
+  },[rawData, range, votingOptions, inputAddress])
 
     return (
       <>
@@ -190,6 +209,35 @@ export default function PoolChart(props) {
       <div style={{ width: "80%", minWidth: "250px"}}>
         { (chartData.data)&&
           <>
+          <div className='slider-container'>
+            <input 
+                className='addr-input' 
+                value={inputAddress}
+                type="text" 
+                id="fname" 
+                name="ciao"
+                autoFocus={true}
+                onChange={handleTextInput}
+                placeholder={"Input the voter's address"}/>
+          </div>
+          <div className='slider-container'>
+            <FormControl>
+              <RadioGroup
+                row
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue={'All'}
+                value={votingValue}
+                name="radio-buttons-group"
+                onChange= {handleVoteOption}
+              >
+                <FormControlLabel value="All" control={<Radio />} label="All" />
+                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="Abstain" control={<Radio />} label="Abstain" />
+                <FormControlLabel value="No" control={<Radio />} label="No" />
+                <FormControlLabel style={{marginRight:'0px'}} value="No with veto" control={<Radio />} label="No With Veto" />
+              </RadioGroup>
+            </FormControl>
+          </div>
           <div className='slider-container'>
             <div className='slider-text-container'>
               <div className='slider-text'>
@@ -206,24 +254,6 @@ export default function PoolChart(props) {
               min={balanceRange[0]}
               max={balanceRange[1]}
             />
-          </div>
-          <div className='slider-container'>
-            <FormControl>
-              <RadioGroup
-                row
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={votingOptions}
-                name="radio-buttons-group"
-                multiple
-                onChange= {handleVoteOption}
-              >
-                <FormControlLabel value="All" control={<Radio />} label="All" />
-                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="Abstain" control={<Radio />} label="Abstain" />
-                <FormControlLabel value="No" control={<Radio />} label="No" />
-                <FormControlLabel style={{marginRight:'0px'}} value="No with veto" control={<Radio />} label="No With Veto" />
-              </RadioGroup>
-            </FormControl>
           </div>
           <Bubble options={chartData.options} data={chartData.data} />
           </>
