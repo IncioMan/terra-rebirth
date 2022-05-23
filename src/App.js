@@ -11,7 +11,7 @@ function App() {
         <div className='div-logo'>
           <img src={logo} className="App-logo" alt="logo" />
           <div style={{paddingTop: "10px", paddingLeft: "16px"}}>
-            Proposal <a style={{color:'#1876d1'}} href='https://station.terra.money/proposal/1623'>#1623</a> - Rebirth Terra Network
+            Proposal <a target='_blank' style={{color:'#1876d1'}} href='https://station.terra.money/proposal/1623'>#1623</a> - Rebirth Terra Network
           </div>
         </div>
         <PoolChart/>
