@@ -40,7 +40,7 @@ export default function PoolChart(props) {
   const [votingValue, setVotingValue] = useState('All')
   const [rawData, setRawData] = useState([])
   const [range, setRange] = useState([10,90])
-  const [votingOptions, setVotingOptions] = useState(['Yes','No'])
+  const [votingOptions, setVotingOptions] = useState(['Yes','No','Abstain','No with veto'])
   const [chartData, setChartData] = useState({options:null, data:null})
   const votingOptionColor = {
     'Yes':'limegreen',
@@ -206,7 +206,7 @@ export default function PoolChart(props) {
     return (
       <>
       <div className='chart-container'>
-      <div style={{ width: "80%", minWidth: "250px"}}>
+      <div style={{ width: "80%", minWidth: "250px", height: "100%", overflow: "scroll"}}>
         { (chartData.data)&&
           <>
           <div className='slider-container'>
