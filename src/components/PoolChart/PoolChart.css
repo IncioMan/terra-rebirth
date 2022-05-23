@@ -36,8 +36,8 @@
 .inner-chart-container{
   width: 80%;
   min-width: 250px;
-  height: 100%;
-  overflow: scroll;
+  height: 85%;
+  overflow: auto;
 }
 
 .div-pool-select{
